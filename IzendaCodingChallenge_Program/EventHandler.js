@@ -1,7 +1,8 @@
 var patientsArray; //array to hold all patient data from server
 var lastItemClicked = null; //object signifying the last item clicked. When a radio button is clicked, this is reset
 var state = 0; //state of radio button/viewport. 0: view patient info. 1: Update Patient. 2: Remove Patient 3: Add Patient
-
+var infiniteScroll = true;
+var lastIndexSeen = 0;
 $(document).ready(function() {
     //Onload, load patientsArray
     $.ajax({
@@ -14,7 +15,7 @@ $(document).ready(function() {
          	//copy data into our patients array. This allows us to access the data even after it has rendered.	
          	patientsArray = data;
          	   
-         	refreshPageContent();
+         	refreshPageContent(true);
          },
 
          error: function (jqXHR, status) {
@@ -22,7 +23,7 @@ $(document).ready(function() {
               alert("Error loading database. " + status);
          }
     })
-
+      
     //highligt a table element in our patient table. Deselect last selected element.
     $('ul').on( 'click', 'tr', function () {
     	if(state < 3){ //state 3 (add data) and greater will be functions not requiring a table selection
@@ -47,17 +48,26 @@ $(document).ready(function() {
 		}
     } );
 
-	//refresh page content if radio buttons are pressed
+	  //refresh page content if radio buttons are pressed
     $('#selectCRUDOperation').on('change', function(){ 
-    	refreshPageContent();
+    	refreshPageContent(false);
     } );
+
+    //refectch data from server without saving changes
+    $('#refetch').on('click', function() {
+      alert("hi");
+      loadData("https://izenda.herokuapp.com/patients");
+      lastIndexSeen = 0;
+      lastItemClicked = null;
+      refreshPageContent(infiniteScroll);
+    });
 
     //delete button logic
     $(document).on('click', '#deleteButton', function() {
     	if(lastItemClicked != null){
     		patID = parseInt($(lastItemClicked).find(".idCell").html());
     		removePatient(patID, 0);
-    		refreshPageContent();
+    		refreshPageContent(false);
     	}
     });
 
@@ -73,20 +83,40 @@ $(document).ready(function() {
    		} else{
    			var x = findIndex(value);
 			if(x > -1){ //check if id already exists
-				alert("ID already found in database. Try a different ID or Update Existing Patient Info.");
+				alert("ID already found in data set. Try a different ID or Update Existing Patient Info.");
 			}
    			else{ //add new entry to our array
    				var b = $('#newForm').serializeObject();
    				
    				patientsArray.push(b);
    				patientsArray.sort(sortByProperty('id'));
-   				alert("New Patient Added to the database.");
+   				alert("New Patient Added to the working dataset.");
    				
-   				refreshPageContent();
+   				refreshPageContent(false);
    			}
    		}
 
    	});
+
+    //Infinite Scrolling Logic  
+    $('#InfScrolling').click(function(){
+        if($('#InfScrolling').prop('checked')){
+         infiniteScroll = true;
+         lastIndexSeen = 18;
+        } else{
+          infiniteScroll = false;
+        }
+        refreshPageContent(false);
+    });
+
+    //note if we've reached the end of the table
+    $('#patientTable').scroll(function(){
+      var div = $(this);
+      if (div[0].scrollHeight - div.scrollTop() == div.height() && infiniteScroll == true)
+      {
+          refreshPageContent(true);
+      }
+    });
 
    	//update form submission logic
    	$(document).on('submit','#updateForm',function(e){
@@ -110,30 +140,49 @@ $(document).ready(function() {
    				patientsArray.sort(sortByProperty('id'));
    				alert("Patient updated in the database.");
    				
-   				refreshPageContent();
+   				refreshPageContent(false);
    			}
    		}
 
    	});
 });
 
+//load data from server
+function loadData(myUrl){
+  $.ajax({
 
+      type: "GET",
+      url: myUrl,
+      dataType: "json",
+         
+      success: function (data, status, jqXHR) {
+      //copy data into our patients array. This allows us to access the data even after it has rendered.  
+      patientsArray = data;
+             
+      refreshPageContent(true);
+   },
+
+   error: function (jqXHR, status) {    // error handler
+      alert("Error loading database. " + status);
+         }
+  })
+}
 
 //refreshPageContent: A change to the working set/working state has changed. Reset the page accordingly.
-function refreshPageContent(){
+function refreshPageContent(isEndOFPage){
 	state = parseInt($('input[name=CRUDselector]:checked', '#selectCRUDOperation').val());
 	//refresh patient table
-	generateHTMLTable();
+	generateHTMLTable(isEndOFPage);
 
-	//refresh highlight and selected patient info pane
-	
-	$(lastItemClicked).toggleClass("reset");
-	lastItemClicked = null;
-	generateSelectedPatientInfo(-1);
-
-	if(state == 3){ //Adding a new entry.
-		createNewPatientForm();
-	}
+  //refresh highlight and selected patient info pane if we're not doing an endOfPage refresh
+  if(isEndOFPage == false){
+	 $(lastItemClicked).toggleClass("reset");
+	 lastItemClicked = null;
+	 generateSelectedPatientInfo(-1);
+  }
+	 if(state == 3){ //Adding a new entry.
+	  	createNewPatientForm();
+	 }
 }
 
 //createNewPatientForum: Generate A form to create a new patient.
@@ -150,7 +199,7 @@ function createNewPatientForm(){
 	form = form + "<label>State: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'state\' value=\'GA\'><br>";
 	form = form + "<label>Drugs: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'drug\' value=\'Happiness\'><br>";
 	form = form + "<br><input type=\'submit\' class=\'w3-btn w3-white\' value = \'Submit\'>";
-  form = form + "  ";
+  form = form + "                                        ";
 	form = form + "<input type=\'reset\' class=\'w3-btn w3-white\' id = \'clearFormButton\'>";
 	form = form + "</form><br><br><br>";
 	
@@ -158,16 +207,35 @@ function createNewPatientForm(){
 }
 
 //generateHTMLTable: Generate an html table with all of the json elements listed at the given url
-function generateHTMLTable(){
-	var temp = "<table> ";
+function generateHTMLTable(isEndOFPage){
 
-    for(var x = 0; x < patientsArray.length; x++){
-    	temp = temp + "<tr id=\'clickRow\'> " + "<td class = \'idCell\'> " + patientsArray[x].id + " </td>" + "<td> " + patientsArray[x].last_name + " </td>" + "<td> " + patientsArray[x].first_name + " </td>" + "<td> " + patientsArray[x].gender + " </td>" + "<td> " + patientsArray[x].state + " </td>" + "<td> " + patientsArray[x].street_address + " </td>" + " </tr>";
+  var tableLength = getTableLength(isEndOFPage);
+  var temp = "<table class='w3-table w3-bordered  w3-hoverable'>";
+
+    for(var x = 0; x < tableLength; x++){
+    	temp = temp + "<tr id=\'clickRow\'>" + "<td class = \'idCell\'>" + patientsArray[x].id + "</td>" + "<td>" + patientsArray[x].last_name + "</td>" + "<td>" + patientsArray[x].first_name + "</td>" + "<td>" + patientsArray[x].gender + "</td>" + "<td>" + patientsArray[x].state + "</td>" + "<td>" + patientsArray[x].street_address + "</td>" + "</tr>";
     }
 
   	temp = temp + "</table>";
 
    	$("#pT").html("" + temp);
+}
+
+//Used to add more elements after infiniteScroll has reached end OR to tell generateHTMLArray to use full array length
+function getTableLength(isEndOFPage){
+  if(infiniteScroll){
+    if(isEndOFPage==true){ //If we're at the end of the page, we need to load more elements
+      
+      lastIndexSeen = lastIndexSeen + 18;
+      if(lastIndexSeen > patientsArray.length){ //Check if lastIndexSeen is greater than patientsArray length
+        lastIndexSeen = patientsArray.length;
+      }
+    }
+    return lastIndexSeen;
+  }
+  else{
+    return patientsArray.length;
+  }  
 }
 
 //findIndex: Find the index of a given patientID. Return -1 otherwise.
@@ -201,8 +269,8 @@ function generateEditablePatientInfo(patientID){
 		form = form + "<label>Street Address: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'street_address\' value=\'" + patientsArray[y].street_address + "\'><br>";
 		form = form + "<label>State: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'state\' value=\'" + patientsArray[y].state + "\'><br>";
 		form = form + "<label>Drugs: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'drug\' value=\'" + patientsArray[y].drug + "\'><br>";
-		form = form + "<br><input type=\'submit\' class=\'w3-btn w3-white\' value = \'Submit\'>";
-		form = form + "  ";
+		form = form + "<br><input type=\'submit\' class=\'w3-btn w3-white\' value = \'Update\'>";
+		form = form + "                                     ";
     form = form + "<input type=\'reset\' class=\'w3-btn w3-white\' id = \'clearFormButton\'>";
 		form = form + "</form><br><br><br>";
 
