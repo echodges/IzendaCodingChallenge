@@ -1,6 +1,6 @@
-# @Title: IzendaCodingChallenge
-# @Author: Chris Hodges
-# @Date: 10/26/16.
+# Title: IzendaCodingChallenge
+# Author: Chris Hodges
+# Date: 10/26/16.
 Developed web application to demonstrate abilities in JavaScript and RESTful services.
 
 Resoureces: Contains a snapshot of the expected output as well as given prompt.
