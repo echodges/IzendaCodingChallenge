@@ -1,8 +1,9 @@
 var patientsArray; //array to hold all patient data from server
 var lastItemClicked = null; //object signifying the last item clicked. When a radio button is clicked, this is reset
 var state = 0; //state of radio button/viewport. 0: view patient info. 1: Update Patient. 2: Remove Patient 3: Add Patient
-var infiniteScroll = true;
-var lastIndexSeen = 0;
+var infiniteScroll = true; //toggle infinite scroll
+var lastIndexSeen = 0; //last index seen in infinite scroll
+
 $(document).ready(function() {
     //Onload, load patientsArray
     $.ajax({
@@ -43,7 +44,6 @@ $(document).ready(function() {
 	    		lastItemClicked = this;
 		    	patID = parseInt($(this).find(".idCell").html());
 			}
-
 	    	rowSelectionAction(patID);
 		}
     } );
@@ -55,11 +55,11 @@ $(document).ready(function() {
 
     //refectch data from server without saving changes
     $('#refetch').on('click', function() {
-      alert("hi");
       loadData("https://izenda.herokuapp.com/patients");
       lastIndexSeen = 0;
       lastItemClicked = null;
       refreshPageContent(infiniteScroll);
+      $("#selectedPatient").html("No Patient Selected!");
     });
 
     //delete button logic
@@ -67,8 +67,8 @@ $(document).ready(function() {
     	if(lastItemClicked != null){
     		patID = parseInt($(lastItemClicked).find(".idCell").html());
     		removePatient(patID, 0);
-    		refreshPageContent(false);
-    	}
+    	} 
+      refreshPageContent(false);
     });
 
     //new form submission logic
@@ -79,18 +79,18 @@ $(document).ready(function() {
    		value = parseInt(value);
    		
    		if(isNaN(value) || value < 1){ //check if id is valid
-   			alert("Invalid ID Input. Input a positive integer.")
+   			alert("Invalid ID input. Input a positive integer.")
    		} else{
    			var x = findIndex(value);
 			if(x > -1){ //check if id already exists
-				alert("ID already found in data set. Try a different ID or Update Existing Patient Info.");
+				alert("ID already found in data set. Try a different ID or update existing patient Info.");
 			}
    			else{ //add new entry to our array
    				var b = $('#newForm').serializeObject();
    				
    				patientsArray.push(b);
    				patientsArray.sort(sortByProperty('id'));
-   				alert("New Patient Added to the working dataset.");
+   				alert("New patient added to the working dataset.");
    				
    				refreshPageContent(false);
    			}
@@ -126,7 +126,7 @@ $(document).ready(function() {
    		value = parseInt(value);
    		
    		if(isNaN(value) || value < 1){ //check if id is valid
-   			alert("Invalid ID Input. Please try again." + value);
+   			alert("Invalid ID input. Please try again." + value);
    		} else{
    			var x = findIndex(value);
 			if(x < 0){ //check if it exists... if it doesn't something went wrong
@@ -138,7 +138,7 @@ $(document).ready(function() {
    				
    				patientsArray.push(b);
    				patientsArray.sort(sortByProperty('id'));
-   				alert("Patient updated in the database.");
+   				alert("Patient updated in the working set.");
    				
    				refreshPageContent(false);
    			}
@@ -211,14 +211,14 @@ function generateHTMLTable(isEndOFPage){
 
   var tableLength = getTableLength(isEndOFPage);
   var temp = "<table class='w3-table w3-bordered  w3-hoverable'>";
+  temp = temp + "<th>ID</th><th>Last Name</th><th>First Name</th><th>Gender</th><th>Address</th><th>State</th>";
+  for(var x = 0; x < tableLength; x++){
+   	temp = temp + "<tr id=\'clickRow\'>" + "<td class = \'idCell\'>" + patientsArray[x].id + "</td>" + "<td>" + patientsArray[x].last_name + "</td>" + "<td>" + patientsArray[x].first_name + "</td>" + "<td>" + patientsArray[x].gender + "</td>" + "<td>" + patientsArray[x].street_address + "</td>" + "<td>" + patientsArray[x].state + "</td>" + "</tr>";
+  }
 
-    for(var x = 0; x < tableLength; x++){
-    	temp = temp + "<tr id=\'clickRow\'>" + "<td class = \'idCell\'>" + patientsArray[x].id + "</td>" + "<td>" + patientsArray[x].last_name + "</td>" + "<td>" + patientsArray[x].first_name + "</td>" + "<td>" + patientsArray[x].gender + "</td>" + "<td>" + patientsArray[x].state + "</td>" + "<td>" + patientsArray[x].street_address + "</td>" + "</tr>";
-    }
+  temp = temp + "</table>";
 
-  	temp = temp + "</table>";
-
-   	$("#pT").html("" + temp);
+  $("#pT").html("" + temp);
 }
 
 //Used to add more elements after infiniteScroll has reached end OR to tell generateHTMLArray to use full array length
@@ -323,7 +323,7 @@ function removePatient(patientID, usageFlag){
 	if(y > -1){
 		if(usageFlag == 0){
 			var nameTag = patientsArray[y].first_name + " " + patientsArray[y].last_name + " (Patient" + patientsArray[y].id + ").";
-			alert("Removing " + nameTag);
+			alert("Removing " + nameTag + " from working set.");
 		}
 		patientsArray.splice(y, 1);
 	}

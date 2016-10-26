@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8"/>
         <title>Patient Records</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="EventHandler.js"></script>
@@ -10,9 +11,9 @@
 
     <!-- Header -->
     <header class="w3-container w3-blue">
-         <h1>Izenda Coding Challenge 1</h1>
+        <img src="http://ma.izenda.com/hs-fs/hub/409433/file-2355406249-png/IzendaNewLogoBlueTR.png?t=1477509148587" alt="Izenda">
+         <h1>Coding Challenge 1</h1>
     </header>
-
 
     <!-- Content Begins -->
     <body>
@@ -42,8 +43,9 @@
                     <p id="pT"> Patient Table Loads Here. </p>
                 </div>
                 <input type="checkbox" class = "w3-check" id = "InfScrolling" checked> Use Infinite Scrolling
-                <br><input type='button' class='w3-btn w3-green' value = 'Commit To Database' id = 'commit'>
-                <input type='button' class='w3-btn w3-red' id = 'refetch' value = 'Fetch Data (Lose Unsaved Changes)'>
+                <div class = "smallSpacer">    </div>
+                <br><input type='button' class='w3-btn w3-green' value = 'Commit To Database (Coming Soon)' id = 'commit' disabled="diabled">
+                <input type='button' class='w3-btn w3-red' id = 'refetch' value = 'Refetch Data (Lose Unsaved Changes)'>
             </ul>
             <div class = "spacer">    </div>
 

@@ -36,5 +36,7 @@ footer{
 .spacer{
 	padding:.21cm .5cm 1.78cm 1cm;
 }
-}
 
+.smallSpacer{
+	padding:.1cm .1cm .1cm .1cm;
+}
