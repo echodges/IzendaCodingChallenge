@@ -1,0 +1,26 @@
+body {
+
+}
+
+p {
+    color: navy;
+    margin-left: 20px;
+}
+
+
+#patientTable{
+    border: 5px solid gray;
+    padding: 5px;
+    width: 500px;
+    height: 120px;
+    overflow-y: scroll;
+}
+
+.highlight{
+	background: yellow;
+}
+
+.reset{
+
+	background: white;
+}
