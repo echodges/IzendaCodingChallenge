@@ -141,17 +141,18 @@ function createNewPatientForm(){
 	//note: all of tihs could be one line but it's hard to read. 
 	//process could be placed in a foreach loop but I wanted to leave the form open for future versatility
 	var form = "<form id = \'newForm\' action = \'\' >";
-	form = form + "<label>Desired ID: </label>" + "<input type=\'text\' name=\'id\' value=\'1\'><br>";
-	form = form + "<label>First Name: </label>" + "<input type=\'text\' name=\'first_name\' value=\'Mickey\'><br>";
-	form = form + "<label>Last Name: </label>" + "<input type=\'text\' name=\'last_name\' value=\'Mouse\'><br>";
-	form = form + "<label>Email: </label>" + "<input type=\'text\' name=\'email\' value=\'mouse@gmail.com\'><br>";
-	form = form + "<label>Gender: </label>" + "<input type=\'text\' name=\'gender\' value=\'Male\'><br>";
-	form = form + "<label>Street Address: </label>" + "<input type=\'text\' name=\'street_address\' value=\'123 No Way\'><br>";
-	form = form + "<label>State: </label>" + "<input type=\'text\' name=\'state\' value=\'GA\'><br>";
-	form = form + "<label>Drugs: </label>" + "<input type=\'text\' name=\'drug\' value=\'Happiness\'><br>";
-	form = form + "<input type=\'submit\' value = \'Submit\'>";
-	form = form + "<input type=\'reset\' id = \'clearFormButton\'>";
-	form = form + "</form>";
+	form = form + "<label>Desired ID: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'id\' value=\'1\'><br>";
+	form = form + "<label>First Name: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'first_name\' value=\'Mickey\'><br>";
+	form = form + "<label>Last Name: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'last_name\' value=\'Mouse\'><br>";
+	form = form + "<label>Email: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'email\' value=\'mouse@gmail.com\'><br>";
+	form = form + "<label>Gender: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'gender\' value=\'Male\'><br>";
+	form = form + "<label>Street Address: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'street_address\' value=\'123 No Way\'><br>";
+	form = form + "<label>State: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'state\' value=\'GA\'><br>";
+	form = form + "<label>Drugs: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'drug\' value=\'Happiness\'><br>";
+	form = form + "<br><input type=\'submit\' class=\'w3-btn w3-white\' value = \'Submit\'>";
+  form = form + "  ";
+	form = form + "<input type=\'reset\' class=\'w3-btn w3-white\' id = \'clearFormButton\'>";
+	form = form + "</form><br><br><br>";
 	
 	$("#selectedPatient").html(form);
 }
@@ -192,17 +193,18 @@ function generateEditablePatientInfo(patientID){
         var form = "<form id = \'updateForm\' action = \'\' >";
 
 	
-		form = form + "<label>Desired ID: </label>" + "<input type=\'text\' name=\'id\' value=\'" + patientsArray[y].id + "\'><br>";
-		form = form + "<label>First Name: </label>" + "<input type=\'text\' name=\'first_name\' value=\'" + patientsArray[y].first_name + "\'><br>";
-		form = form + "<label>Last Name: </label>" + "<input type=\'text\' name=\'last_name\' value=\'" + patientsArray[y].last_name + "\'><br>";
-		form = form + "<label>Email: </label>" + "<input type=\'text\' name=\'email\' value=\'" + patientsArray[y].email + "\'><br>";
-		form = form + "<label>Gender: </label>" + "<input type=\'text\' name=\'gender\' value=\'" + patientsArray[y].gender + "\'><br>";
-		form = form + "<label>Street Address: </label>" + "<input type=\'text\' name=\'street_address\' value=\'" + patientsArray[y].street_address + "\'><br>";
-		form = form + "<label>State: </label>" + "<input type=\'text\' name=\'state\' value=\'" + patientsArray[y].state + "\'><br>";
-		form = form + "<label>Drugs: </label>" + "<input type=\'text\' name=\'drug\' value=\'" + patientsArray[y].drug + "\'><br>";
-		form = form + "<input type=\'submit\' value = \'Submit\'>";
-		form = form + "<input type=\'reset\' id = \'clearFormButton\'>";
-		form = form + "</form>";
+		form = form + "<label>Desired ID: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'id\' value=\'" + patientsArray[y].id + "\'><br>";
+		form = form + "<label>First Name: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'first_name\' value=\'" + patientsArray[y].first_name + "\'><br>";
+		form = form + "<label>Last Name: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'last_name\' value=\'" + patientsArray[y].last_name + "\'><br>";
+		form = form + "<label>Email: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'email\' value=\'" + patientsArray[y].email + "\'><br>";
+		form = form + "<label>Gender: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'gender\' value=\'" + patientsArray[y].gender + "\'><br>";
+		form = form + "<label>Street Address: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'street_address\' value=\'" + patientsArray[y].street_address + "\'><br>";
+		form = form + "<label>State: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'state\' value=\'" + patientsArray[y].state + "\'><br>";
+		form = form + "<label>Drugs: </label>" + "<input type=\'text\' class=\'w3-input w3-hover-sand\' name=\'drug\' value=\'" + patientsArray[y].drug + "\'><br>";
+		form = form + "<br><input type=\'submit\' class=\'w3-btn w3-white\' value = \'Submit\'>";
+		form = form + "  ";
+    form = form + "<input type=\'reset\' class=\'w3-btn w3-white\' id = \'clearFormButton\'>";
+		form = form + "</form><br><br><br>";
 
 		$("#selectedPatient").html(form);
 		$("[name='id']").attr("disabled", "disabled");
@@ -236,7 +238,7 @@ function rowSelectionAction(patientID){
 	//Generate a button to delete selection, reload table if delete occurs
 	if(state == 2){
 		 var currentValue = $("#selectedPatient").html();
-		  $("#selectedPatient").html(currentValue +  "<button type=\'button\' class =\'button\' id = \'deleteButton\'>Delete Record</button>");
+		  $("#selectedPatient").html(currentValue +  "<br><button type=\'button\' id = \'deleteButton\' class=\'w3-btn w3-red\'>Delete Record</button>");
 	}
 
 	if(state == 1){ //allow the original text generator to run just in case this process fails.

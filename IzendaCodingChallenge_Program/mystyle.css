@@ -3,16 +3,25 @@ body {
 }
 
 p {
-    color: navy;
     margin-left: 20px;
 }
 
+footer{
+	position: fixed;
+	Width: 100%;
+	bottom: 0;
+}
 
+#selectorCard{
+	padding:.7cm .5cm 1.78cm 1cm;
+}
+#footerSpacer{
+	width: 20px;
+	background-color: white;
+}
 #patientTable{
-    border: 5px solid gray;
-    padding: 5px;
-    width: 500px;
-    height: 120px;
+    width: 800px;
+    height: 450px;
     overflow-y: scroll;
 }
 
@@ -21,6 +30,11 @@ p {
 }
 
 .reset{
-
 	background: white;
 }
+
+.spacer{
+	padding:.21cm .5cm 1.78cm 1cm;
+}
+}
+
